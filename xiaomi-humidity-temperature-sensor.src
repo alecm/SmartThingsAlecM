@@ -26,9 +26,10 @@
  *  AlecM 2017-07-03 -Modification of A4refillpads excellent Xiaomi Temperature Humidity Sensor to put Humidity in Main Tile
  *                 - Changed name to Xiaomi Humidity Temperature Sensor to indicate Humidity is primary
  *                 - Adjusted background colors for main tile (now Humidity) based on ASHRAE Standard 62-2001 
- *                 " Ventilation for Acceptable Indoor Air Quality
+ *                 " Ventilation for Acceptable Indoor Air Quality"
  *                   //https://buildingscience.com/documents/reports/rr-0203-relative-humidity/view
- *                 * Made temperature
+ *                 - Made temperature2 tile 2 x 2
+ *                 - Set Humidity to Main on line 122 and put in temperature2 tile
  * 
  */
 metadata {
