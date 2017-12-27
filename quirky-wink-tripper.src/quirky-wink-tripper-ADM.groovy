@@ -233,7 +233,7 @@ private getBatteryResult(volts) {
 }
 //////////
 
-//private getBatteryResult2(volts) {    //This one returns value in volts  -  11-25-2016 - ADM - gave up on this for now - tricky to get the two results
+//private getBatteryResult2(volts) {    //This one returns value in volts  -  11-25-2016 - AlecM - gave up on this for now - tricky to get the two results
 	
 //	def minVolts = 21
     //AlecM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
