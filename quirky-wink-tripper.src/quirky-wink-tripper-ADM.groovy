@@ -18,7 +18,7 @@
  */
 
 metadata {
-	definition (name: "Quirky/Wink Tripper - ADM", namespace: "mitchpond", author: "Mitch Pond") {
+	definition (name: "Quirky/Wink Tripper - AlecM", namespace: "mitchpond", author: "Mitch Pond") {
     
 		capability "Contact Sensor"
 		capability "Battery"
@@ -44,7 +44,7 @@ metadata {
             	attributeState "battery", label:'${currentValue} % battery', unit:""
             }
         }
-		///standardTile("contact", "device.contact", width: 2, height: 2, canChangeIcon: true) {   ///ADM - 11/23//2016 Commented out as contact and battery were put into multitile by MPond - see 
+		///standardTile("contact", "device.contact", width: 2, height: 2, canChangeIcon: true) {   ///AlecM - 11/23//2016 Commented out as contact and battery were put into multitile by MPond - see 
 		///	state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e")// comment below on richcontact at line 61
 		///	state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821")
 		///}
@@ -52,8 +52,8 @@ metadata {
 		///valueTile("battery", "device.battery", decoration: "flat") {
 		///	state "battery", label:'${currentValue}% battery', unit:""
 		///}
-       // valueTile("voltreport", "device.voltreport", decoration: "flat", width:2, height: 2) {   //ADM - 11/23/2016 added this separate tile so can get voltage in addition to percent
-		///	state "voltreport", label:'${currentValue}', unit:"" // ADM 11-25-2016 - gave up for now on reporting both percentage and units 
+       // valueTile("voltreport", "device.voltreport", decoration: "flat", width:2, height: 2) {   //AlecM - 11/23/2016 added this separate tile so can get voltage in addition to percent
+		///	state "voltreport", label:'${currentValue}', unit:"" // AlecM 11-25-2016 - gave up for now on reporting both percentage and units 
 		}
         
 		standardTile("tamper", "device.tamper", decoration: "flat", width:2, height: 2) {
@@ -62,7 +62,7 @@ metadata {
 		}
         
 		main ("richcontact")
-		//details(["richcontact","tamper","voltreport"]) //removed "contact", "battery"  //ADM 11-25-2016 - gave up on voltreport for now 
+		//details(["richcontact","tamper","voltreport"]) //removed "contact", "battery"  //AlecM 11-25-2016 - gave up on voltreport for now 
         details(["richcontact","tamper"]) //removed "contact", "battery"
 	}
 
@@ -164,7 +164,7 @@ private parseReportAttributeMessage(String description) {
 		results = createEvent(getBatteryResult(Integer.parseInt(descMap.value, 16)))
 	}
     
- //   if (descMap.cluster == "0001" && descMap.attrId == "0020") {    //11-25-1016 gave up on voltreport for now (reporting volts in addition to mapped percentage)
+ //   if (descMap.cluster == "0001" && descMap.attrId == "0020") {    //AlecM 11-25-1016 gave up on voltreport for now (reporting volts in addition to mapped percentage)
 //		log.debug "Received battery level report"
 //		results = createEvent2(getBatteryResult2(Integer.parseInt(descMap.value, 16)))
 //	}
@@ -211,13 +211,13 @@ private parseIasMessage(String description) {
 //Converts the battery level response into a percentage to display in ST
 //and creates appropriate message for given level
 
-//ADM - 8-31 Added mapping values for 34 -29 to map below -since they were valid values - 3 or 2.9  volts were returning null
+//AlecM - 8-31 Added mapping values for 34 -29 to map below -since they were valid values - 3 or 2.9  volts were returning null
 
 private getBatteryResult(volts) {
 	def batteryMap = [34:100, 33:100, 32:100, 31:100, 30:100, 29:95, 28:90, 27:80, 26:75, 25:50, 24:25, 23:20,
                           22:10, 21:0]
 	def minVolts = 21
-    //ADM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
+    //AlecM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
 	def maxVolts = 34  
 	def linkText = getLinkText(device)
 	def result = [name: 'battery']
@@ -236,7 +236,7 @@ private getBatteryResult(volts) {
 //private getBatteryResult2(volts) {    //This one returns value in volts  -  11-25-2016 - ADM - gave up on this for now - tricky to get the two results
 	
 //	def minVolts = 21
-    //ADM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
+    //AlecM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
 //	def maxVolts = 34  
 //	def linkText = getLinkText(device)
 //    def result = [name: 'voltreport']
@@ -246,7 +246,7 @@ private getBatteryResult(volts) {
 //    	else if (volts > maxVolts) volts = maxVolts
 
  //   result.value = volts/10
-//    result.descriptionText = "${linkText} battery was ${result.value} volts"  //ADM 11/23/16 - trying to send back both results, percentage (battery) and volts/10 (voltreport)
+//    result.descriptionText = "${linkText} battery was ${result.value} volts"  //AlecM 11/23/16 - trying to send back both results, percentage (battery) and volts/10 (voltreport)
 
 //	return result
 //}
