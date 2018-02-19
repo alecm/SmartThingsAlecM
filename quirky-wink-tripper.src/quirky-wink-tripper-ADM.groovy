@@ -14,11 +14,12 @@
  *
  * 2016-17  AlecM - Minor tweak I updated this driver by by Mitch Pond to have different values for battery percentages 
  * and fix a couple of typos in lines around 210
+ * 2/19/2018 changed namespace to "alecm" to enable github repo sync
  *
  */
 
 metadata {
-	definition (name: "Quirky/Wink Tripper - AlecM", namespace: "mitchpond", author: "Mitch Pond") {
+	definition (name: "Quirky/Wink Tripper - AlecM", namespace: "alecm", author: "Mitch Pond") {
     
 		capability "Contact Sensor"
 		capability "Battery"
