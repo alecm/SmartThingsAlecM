@@ -14,7 +14,7 @@
  *
  * 2016-17  AlecM - Minor tweak I updated this driver by by Mitch Pond to have different values for battery percentages 
  * and fix a couple of typos in lines around 210
- * 2/19/2018 changed namespace to "alecm" to enable github repo sync
+ * 2/19/2018 changed namespace to "alecm" to enable github repo sync and cleaned out some testing code
  *
  */
 
@@ -45,17 +45,7 @@ metadata {
             	attributeState "battery", label:'${currentValue} % battery', unit:""
             }
         }
-		///standardTile("contact", "device.contact", width: 2, height: 2, canChangeIcon: true) {   ///AlecM - 11/23//2016 Commented out as contact and battery were put into multitile by MPond - see 
-		///	state("open", label:'${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e")// comment below on richcontact at line 61
-		///	state("closed", label:'${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821")
-		///}
-        
-		///valueTile("battery", "device.battery", decoration: "flat") {
-		///	state "battery", label:'${currentValue}% battery', unit:""
-		///}
-       // valueTile("voltreport", "device.voltreport", decoration: "flat", width:2, height: 2) {   //AlecM - 11/23/2016 added this separate tile so can get voltage in addition to percent
-		///	state "voltreport", label:'${currentValue}', unit:"" // AlecM 11-25-2016 - gave up for now on reporting both percentage and units 
-		}
+	}
         
 		standardTile("tamper", "device.tamper", decoration: "flat", width:2, height: 2) {
 			state "clear", label: "Clear", icon: "st.security.alarm.on", backgroundColor:"#79b821"
@@ -164,11 +154,7 @@ private parseReportAttributeMessage(String description) {
 		log.debug "Received battery level report"
 		results = createEvent(getBatteryResult(Integer.parseInt(descMap.value, 16)))
 	}
-    
- //   if (descMap.cluster == "0001" && descMap.attrId == "0020") {    //AlecM 11-25-1016 gave up on voltreport for now (reporting volts in addition to mapped percentage)
-//		log.debug "Received battery level report"
-//		results = createEvent2(getBatteryResult2(Integer.parseInt(descMap.value, 16)))
-//	}
+ 
 
 	return results
 }
@@ -232,27 +218,6 @@ private getBatteryResult(volts) {
     log.debug("${linkText} reports battery voltage at ${result.value}%") //added logging for voltage level to help determine actual min voltage from users
 	return result
 }
-//////////
-
-//private getBatteryResult2(volts) {    //This one returns value in volts  -  11-25-2016 - AlecM - gave up on this for now - tricky to get the two results
-	
-//	def minVolts = 21
-    //AlecM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
-//	def maxVolts = 34  
-//	def linkText = getLinkText(device)
-//    def result = [name: 'voltreport']
-//	log.debug("${linkText} voltreport reports battery voltage at ${volts/10}") //added logging for voltage level to help determine actual min voltage from users
-    
-//    if (volts < minVolts) volts = minVolts
-//    	else if (volts > maxVolts) volts = maxVolts
-
- //   result.value = volts/10
-//    result.descriptionText = "${linkText} battery was ${result.value} volts"  //AlecM 11/23/16 - trying to send back both results, percentage (battery) and volts/10 (voltreport)
-
-//	return result
-//}
-
-//////////////
 
 
 private Map getContactResult(value) {
