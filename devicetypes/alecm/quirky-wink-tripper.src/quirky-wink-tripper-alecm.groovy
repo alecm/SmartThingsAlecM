@@ -19,7 +19,7 @@
  */
 
 metadata {
-	definition (name: "Quirky Wink Tripper - AlecM", namespace: "alecm", author: "alecm") {
+	definition (name: "Quirky Wink Tripper AlecM", namespace: "alecm", author: "Mitch Pond") {
     
 		capability "Contact Sensor"
 		capability "Battery"
