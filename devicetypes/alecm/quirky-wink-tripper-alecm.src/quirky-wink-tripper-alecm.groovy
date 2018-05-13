@@ -26,6 +26,12 @@ metadata {
 		capability "Configuration"
 		capability "Sensor"
 		capability "Tamper Alert"
+		
+		attribute "lastCheckin", "String"
+        	attribute "lastCheckinDate", "Date"
+       		attribute "lastOpened", "String"
+        	attribute "lastOpenedDate", "Date"
+        	attribute "batteryRuntime", "String"
     
 		command "configure"
 		command "resetTamper"
@@ -41,20 +47,34 @@ metadata {
             	attributeState "open", label: '${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e"
                 attributeState "closed", label: '${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821"
             }
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-            	attributeState "battery", label:'${currentValue} % battery', unit:""
+		tileAttribute("device.lastOpened", key: "SECONDARY_CONTROL") {
+                attributeState("default", label:'Last Opened: ${currentValue}')
             }
+//            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+//            	attributeState "battery", label:'${currentValue} % battery', unit:""
+//            }
         }
 	}
+	    	valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
+            	state "battery", label:'${currentValue}%', unit:"%", icon:"https://raw.githubusercontent.com/bspranger/Xiaomi/master/images/XiaomiBattery.png",
+           	 backgroundColors:[
+                [value: 10, color: "#bc2323"],
+                [value: 26, color: "#f1d801"],
+                [value: 51, color: "#44b621"]
+            ]
+        }
         
 		standardTile("tamper", "device.tamper", decoration: "flat", width:2, height: 2) {
 			state "clear", label: "Clear", icon: "st.security.alarm.on", backgroundColor:"#79b821"
 			state "detected", label: "Tamper Detected", action: "resetTamper", icon: "st.security.alarm.off", backgroundColor:"#ffa81e"
 		}
-        
+	
+                valueTile("batteryRuntime", "device.batteryRuntime", inactiveLabel: false, decoration: "flat", width: 4, height: 1) {
+            	state "batteryRuntime", label:'Battery Changed:\n ${currentValue}'
+        }
 		main ("richcontact")
 		//details(["richcontact","tamper","voltreport"]) //removed "contact", "battery"  //AlecM 11-25-2016 - gave up on voltreport for now 
-        details(["richcontact","tamper"]) //removed "contact", "battery"
+        details(["richcontact","battery", "tamper"."batteryRuntime"]) //2018-05-13 added battery back - new tile since main tile now showing last opened
 	}
 
 
@@ -106,7 +126,15 @@ def configure() {
 		]
 	cmd
 }
-
+ preferences {
+		//Date & Time Config
+		input description: "", type: "paragraph", element: "paragraph", title: "DATE & CLOCK"    
+		input name: "dateformat", type: "enum", title: "Set Date Format\n US (MDY) - UK (DMY) - Other (YMD)", description: "Date Format", options:["US","UK","Other"]
+		input name: "clockformat", type: "bool", title: "Use 24 hour clock?"
+		//Battery Reset Config
+            	input description: "If you have installed a new battery, the toggle below will reset the Changed Battery date to help remember when it was changed.", type: "paragraph", element: "paragraph", title: "CHANGED BATTERY DATE RESET"
+		input name: "battReset", type: "bool", title: "Battery Changed?"
+  } 
 //Sends IAS Zone Enroll response
 def enrollResponse() {
 	log.debug "Sending enroll response"
@@ -167,7 +195,11 @@ private parseIasMessage(String description) {
 
 	def results = []
 	//log.debug(description)
-	if (status & 0b00000001) {results << createEvent(getContactResult('open'))}
+	if (status & 0b00000001) 
+		{results << createEvent(getContactResult('open'))}
+		{results << createEvent(lastOpened(now))}
+		{results << createEvent(lastOpenedDate(nowDate))}
+	
 	else if (~status & 0b00000001) results << createEvent(getContactResult('closed'))
 
 	if (status & 0b00000100) {
