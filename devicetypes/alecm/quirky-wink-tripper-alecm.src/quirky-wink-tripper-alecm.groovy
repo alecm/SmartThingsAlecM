@@ -14,12 +14,21 @@
  *
  * 2016-17  AlecM - Minor tweak I updated this driver by by Mitch Pond to have different values for battery percentages 
  * and fix a couple of typos in lines around 210
- * 2/19/2018 changed namespace to "alecm" to enable github repo sync and cleaned out some testing code
+ * 02-01-2018 AlecM - changed namespace to "alecm" to enable github repo sync and cleaned out some testing code
+ * 08-11-2018 AlecM - Used code copied or adapted from 
+ 			https://github.com/bspranger/Xiaomi/tree/master/devicetypes/bspranger/xiaomi-door-window-sensor.src to 
+ 			-   Report "Last Opened" as secondary controller - modified from 
+ 			-   Shift battery from secondary control to new tile with Xiaomi groups battery icon
+                        -   Add preferences for date format (US - Month/Date/Year or UK Date/Month/Year)
+                        -   Add preferences for 12-hour clock or 24 hour clock
+                        -   Battery icon created by the bspranger Xiaomi group used with permission by the group- originally at 
+                        "https://raw.githubusercontent.com/bspranger/Xiaomi/master/images/XiaomiBattery.png"
+ *			
  *
  */
 
 metadata {
-	definition (name: "Quirky Wink Tripper AlecM", namespace: "alecm", author: "Mitch Pond") {
+	definition (name: "Quirky Wink Tripper AlecM V3", namespace: "alecm", author: "Mitch Pond") {
     
 		capability "Contact Sensor"
 		capability "Battery"
@@ -30,6 +39,9 @@ metadata {
 		command "configure"
 		command "resetTamper"
 		command "testTamper"
+   
+   		attribute "lastOpened", "String"
+   		attribute "lastOpenedDate", "Date" 
         
 		fingerprint endpointId: "01", profileId: "0104", deviceId: "0402", inClusters: "0000,0001,0003,0500,0020,0B05", outClusters: "0003,0019", manufacturer: "Sercomm Corp.", model: "Tripper"
 	}
@@ -41,8 +53,13 @@ metadata {
             	attributeState "open", label: '${name}', icon:"st.contact.contact.open", backgroundColor:"#ffa81e"
                 attributeState "closed", label: '${name}', icon:"st.contact.contact.closed", backgroundColor:"#79b821"
             }
-            tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
-            	attributeState "battery", label:'${currentValue} % battery', unit:""
+            
+
+            //tileAttribute("device.battery", key: "SECONDARY_CONTROL") {
+            ///	attributeState "battery", label:'${currentValue} % battery', unit:""
+               tileAttribute("device.lastOpened", key: "SECONDARY_CONTROL") {
+              attributeState("default", label:'Last Opened: ${currentValue}')
+
             }
         }
 	}
@@ -51,20 +68,59 @@ metadata {
 			state "clear", label: "Clear", icon: "st.security.alarm.on", backgroundColor:"#79b821"
 			state "detected", label: "Tamper Detected", action: "resetTamper", icon: "st.security.alarm.off", backgroundColor:"#ffa81e"
 		}
+        //AlecM 2018-08-11 - add spacers to even out layout of tiles below multitile
+        valueTile("spacer", "spacer", decoration: "flat", inactiveLabel: false, width: 1, height: 2) {
+	    state "default", label:''
+        }
+        valueTile("spacer2", "spacer2", decoration: "flat", inactiveLabel: false, width: 1, height: 2) {
+	    state "default", label:''
+        }
         
+         valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
+            state "battery", label:'${currentValue}%', unit:"%", icon:"https://raw.githubusercontent.com/alecm/SmartThingsAlecM/master/images/XiaomiBattery.png",
+            backgroundColors:[
+                [value: 10, color: "#bc2323"],
+                [value: 26, color: "#f1d801"],
+ //             [value: 51, color: "#44b621"] - changed shade of green for above 51%
+                [value: 51, color: "#79b821"]
+                
+            ]
+        }
 		main ("richcontact")
-		//details(["richcontact","tamper","voltreport"]) //removed "contact", "battery"  //AlecM 11-25-2016 - gave up on voltreport for now 
-        details(["richcontact","tamper"]) //removed "contact", "battery"
+        details(["richcontact","spacer","tamper","battery","spacer2"]) 
+         preferences {
+		//Date & Time Config
+		input description: "", type: "paragraph", element: "paragraph", title: "DATE & CLOCK"    
+		input name: "dateformat", type: "enum", title: "Set Date Format\n US (MDY) - UK (DMY)", description: "Date Format", options:["US","UK"]
+		input name: "clockformat", type: "bool", title: "Use 24 hour clock?"
+
+  } 
 	}
-
-
 
 
 // Parse incoming device messages to generate events
 def parse(String description) {
-	log.debug "description: $description"
+	//def now = new Date().format("yyyy MMM dd EEE h:mm:ss a", location.timeZone)
+    def timeString = clockformat ? "HH:mm:ss" : "h:mm:ss aa"
+   	//def nowUS = new Date().format("EEE MMM dd yyyy ${timeString}", location.timeZone)
+    
+    def nowUS = new Date().format("EEE MMM dd yyyy ${timeString}", location.timeZone)
+    def nowUK = new Date().format("EEE dd MMM yyyy ${timeString}", location.timeZone)
+    //def nowDate = new Date(now).getTime()
+    log.debug "description: $description"
 
 	def results = []
+    if (description?.startsWith('zone status 0x0031 ')) 
+    {
+      //sendEvent(name: "lastOpened", value: now)
+      if (dateformat == "US" || dateformat == "" || dateformat == null){
+      	sendEvent(name: "lastOpened", value: nowUS)}
+        else if (dateformat == "UK"){ 
+        sendEvent(name: "lastOpened", value: nowUK)
+      
+      //sendEvent(name: "lastOpenedDate", value: nowDate) 
+    }  
+    }
 	if (description?.startsWith('catchall:')) {
 		results = parseCatchAllMessage(description)
 	}
@@ -74,7 +130,6 @@ def parse(String description) {
 	else if (description?.startsWith('zone status')) {
 		results = parseIasMessage(description)
 	}
-
 	log.debug "Parse returned $results"
 
 	if (description?.startsWith('enroll request')) {
@@ -82,6 +137,8 @@ def parse(String description) {
 		log.debug "enroll response: ${cmds}"
 		results = cmds?.collect { new physicalgraph.device.HubAction(it) }
 	}
+    
+    
 	return results
 }
 
@@ -106,6 +163,7 @@ def configure() {
 		]
 	cmd
 }
+
 
 //Sends IAS Zone Enroll response
 def enrollResponse() {
@@ -166,12 +224,17 @@ private parseIasMessage(String description) {
 	def linkText = getLinkText(device)
 
 	def results = []
-	//log.debug(description)
-	if (status & 0b00000001) {results << createEvent(getContactResult('open'))}
+	log.debug(description)
+	if (status & 0b00000001) {
+    		//sendEvent(name: "lastOpened", value: nowTime, displayed: true)
+  
+            results << createEvent(getContactResult('open'))
+           // createEvent(name: "lastOpenedDate", value: nowDate, displayed: true)}
+           }
 	else if (~status & 0b00000001) results << createEvent(getContactResult('closed'))
 
 	if (status & 0b00000100) {
-    		//log.debug "Tampered"
+    		log.debug "Tampered"
             results << createEvent([name: "tamper", value:"detected"])
 	}
 	else if (~status & 0b00000100) {
@@ -204,7 +267,7 @@ private getBatteryResult(volts) {
 	def batteryMap = [34:100, 33:100, 32:100, 31:100, 30:100, 29:95, 28:90, 27:80, 26:75, 25:50, 24:25, 23:20,
                           22:10, 21:0]
 	def minVolts = 21
-    //AlecM 10-2 changed maxvolts to 34 to see what really getting w/ new battery
+    //AlecM 10-2-2016 changed maxvolts to 34 to see what really getting w/ new battery
 	def maxVolts = 34  
 	def linkText = getLinkText(device)
 	def result = [name: 'battery']
