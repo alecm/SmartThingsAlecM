@@ -18,9 +18,9 @@
  
 import physicalgraph.zigbee.clusters.iaszone.ZoneStatus
 import physicalgraph.zigbee.zcl.DataType
-
+// 2018-01-06 AlecM - had to change namespace and author - both should be "SmartThings" to make it work w/ github
 metadata {
-	definition(name: "SmartSense Multi Sensor with Temp Focus", namespace: "AlecM", author: "SmartThings") {
+	definition(name: "SmartSense Multi Sensor with Temp Focus", namespace: "AlecM", author: "AlecM") {
 
 		capability "Three Axis"
 		capability "Battery"
