@@ -1,0 +1,5 @@
+  - id: "Quirky Tripper"
+    deviceLabel: Quirky Tripper
+    manufacturer: Sercomm Corp.
+    model: Tripper
+    deviceProfileName: contact-battery-profile
