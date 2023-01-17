@@ -5,7 +5,7 @@ local IASZone = clusters.IASZone
 local PowerConfiguration = clusters.PowerConfiguration
 
 local FINGERPRINTS = {
-  { mfr = "LUMI", model = "lumi.magnet.agl02" }
+  { mfr = "Sercomm Corp.", model = "Tripper" }
 }
 
 local CONFIGURATIONS = {
@@ -27,7 +27,7 @@ local CONFIGURATIONS = {
   }
 }
 
-local is_aqara_products = function(opts, driver, device, ...)
+local is_tripper_products = function(opts, driver, device, ...)
   for _, fingerprint in ipairs(FINGERPRINTS) do
     if device:get_manufacturer() == fingerprint.mfr and device:get_model() == fingerprint.model then
       return true
@@ -45,12 +45,12 @@ local function device_init(driver, device)
   end
 end
 
-local aqara_contact_handler = {
-  NAME = "Aqara Contact Handler",
+local tripper_contact_handler = {
+  NAME = "Quirky Tripper Door/Window Sensor",
   lifecycle_handlers = {
     init = device_init
   },
   can_handle = is_aqara_products
 }
 
-return aqara_contact_handler
+return tripper_contact_handler
