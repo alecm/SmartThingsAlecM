@@ -20,32 +20,15 @@ local TemperatureMeasurement = clusters.TemperatureMeasurement
 local PollControl = clusters.PollControl
 
 local devices = {
-  ORVIBO_CONTACT = {
+  QUIRKY_TRIPPER = {
     FINGERPRINTS = {
-      { mfr = "ORVIBO", model = "e70f96b3773a4c9283c6862dbafb6a99" }
-    },
-    CONFIGURATION = {
-      {
-        cluster = IASZone.ID,
-        attribute = IASZone.attributes.ZoneStatus.ID,
-        minimum_interval = 30,
-        maximum_interval = 300,
-        data_type = IASZone.attributes.ZoneStatus.base_type,
-        reportable_change = 1
-      }
-    }
-  },
-  EWELINK_HEIMAN = {
-    FINGERPRINTS = {
-      { mfr = "eWeLink", model = "DS01" },
-      { mfr = "eWeLink", model = "SNZB-04P" },
-      { mfr = "HEIMAN", model = "DoorSensor-N" }
+      { mfr = "Sercomm Corp.", model = "Tripper" },
     },
     CONFIGURATION = {
       {
         cluster = PowerConfiguration.ID,
         attribute = PowerConfiguration.attributes.BatteryPercentageRemaining.ID,
-        minimum_interval = 30,
+        minimum_interval = 600,
         maximum_interval = 600,
         data_type = PowerConfiguration.attributes.BatteryPercentageRemaining.base_type,
         reportable_change = 1
@@ -60,42 +43,6 @@ local devices = {
       }
     }
   },
-  THIRD_REALITY_CONTACT = {
-    FINGERPRINTS = {
-      { mfr = "Third Reality, Inc", model = "3RDS17BZ" }
-    },
-    CONFIGURATION = {
-      {
-        cluster = PowerConfiguration.ID,
-        attribute = PowerConfiguration.attributes.BatteryPercentageRemaining.ID,
-        minimum_interval = 30,
-        maximum_interval = 300,
-        data_type = PowerConfiguration.attributes.BatteryPercentageRemaining.base_type,
-        reportable_change = 1
-      }
-    }
-  },
-  CONTACT_TEMPERATURE_SENSOR = {
-    FINGERPRINTS = {
-      { mfr = "CentraLite", model = "3300-S" },
-      { mfr = "CentraLite", model = "3300" },
-      { mfr = "CentraLite", model = "3320-L" },
-      { mfr = "CentraLite", model = "3323-G" },
-      { mfr = "CentraLite", model = "Contact Sensor-A" },
-      { mfr = "Visonic", model = "MCT-340 E" },
-      { mfr = "Ecolink", model = "4655BC0-R" },
-      { mfr = "Ecolink", model = "DWZB1-ECO" },
-      { mfr = "iMagic by GreatStar", model = "1116-S" },
-      { mfr = "Bosch", model = "RFMS-ZBMS" },
-      { mfr = "Megaman", model = "MS601/z1" },
-      { mfr = "AduroSmart Eria", model = "CSW_ADUROLIGHT" },
-      { mfr = "ADUROLIGHT", model = "CSW_ADUROLIGHT" },
-      { mfr = "Sercomm Corp.", model = "SZ-DWS04" },
-      { mfr = "DAWON_DNS", model = "SS-B100-ZB" },
-      { mfr = "frient A/S", model = "WISZB-120" },
-      { mfr = "frient A/S", model = "WISZB-121" },
-      { mfr = "Compacta", model = "ZBWDS" }
-    },
     CONFIGURATION = {
       {
         cluster = IASZone.ID,
@@ -104,14 +51,6 @@ local devices = {
         maximum_interval = 300,
         data_type = IASZone.attributes.ZoneStatus.base_type,
         reportable_change = 1
-      },
-      {
-        cluster = TemperatureMeasurement.ID,
-        attribute = TemperatureMeasurement.attributes.MeasuredValue.ID,
-        minimum_interval = 30,
-        maximum_interval = 1800,
-        data_type = TemperatureMeasurement.attributes.MeasuredValue.base_type,
-        reportable_change = 100
       }
     }
   }
