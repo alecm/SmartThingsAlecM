@@ -5,24 +5,9 @@ local battery = capabilities.battery
 local utils = require "st.utils"
 --module emit signal metrics
 local signal = require "signal-metrics"
-
 local can_handle = function(opts, driver, device)
-  if device:get_manufacturer() == "Ecolink" then
-    return device:get_manufacturer() == "Ecolink"
-  elseif device:get_manufacturer() == "frient A/S" then
-    return device:get_manufacturer() == "frient A/S"
   elseif device:get_manufacturer() == "Sercomm Corp." then
     return device:get_manufacturer() == "Sercomm Corp."
-  elseif device:get_manufacturer() == "Universal Electronics Inc" then
-    return device:get_manufacturer() == "Universal Electronics Inc"
-  elseif device:get_manufacturer() == "SmartThings" then
-    return device:get_manufacturer() == "SmartThings"
-  elseif device:get_manufacturer() == "CentraLite" then
-    return device:get_manufacturer() == "CentraLite"
-  elseif device:get_manufacturer() == "Visonic" then
-    return device:get_manufacturer() == "Visonic"
-  elseif device:get_manufacturer() == "Leedarson" then
-    return device:get_manufacturer() == "Leedarson"
   end
 end
 
@@ -32,16 +17,16 @@ local battery_handler = function(driver, device, value, zb_rx)
   signal.metrics(device, zb_rx)
 
   local minVolts = 2.3
-  local maxVolts = 3.0
+  local maxVolts = 3.2
   if device:get_manufacturer() == "Ecolink" or 
     device:get_manufacturer() == "Sercomm Corp." or
     device:get_manufacturer() == "SmartThings" or
     device:get_manufacturer() == "CentraLite" then
 
-    local batteryMap = {[28] = 100, [27] = 100, [26] = 100, [25] = 90, [24] = 90, [23] = 70,
+    local batteryMap = {[32] = 100 [28] = 100, [27] = 100, [26] = 100, [25] = 90, [24] = 90, [23] = 70,
                       [22] = 70, [21] = 50, [20] = 50, [19] = 30, [18] = 30, [17] = 15, [16] = 1, [15] = 0}
     minVolts = 15
-    maxVolts = 28
+    maxVolts = 32
 
     value = utils.clamp_value(value.value, minVolts, maxVolts)
 
@@ -71,7 +56,7 @@ local battery_voltage = {
         }
     },
     lifecycle_handlers = {
-        --added = battery_defaults.build_linear_voltage_init(2.3, 3.0)
+        --added = battery_defaults.build_linear_voltage_init(2.3, 3.2)
     },
 	can_handle = can_handle
 }
