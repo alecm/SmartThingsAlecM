@@ -41,6 +41,10 @@ local devices = {
       { mfr = "eWeLink", model = "SNZB-04P" },
       { mfr = "HEIMAN", model = "DoorSensor-N" }
     },
+    QUIRKY_TRIPPER = {
+    FINGERPRINTS = {
+      { mfr = "Sercomm Corp.", model = "Tripper" },
+    },
     CONFIGURATION = {
       {
         cluster = PowerConfiguration.ID,
@@ -75,44 +79,6 @@ local devices = {
       }
     }
   },
-  CONTACT_TEMPERATURE_SENSOR = {
-    FINGERPRINTS = {
-      { mfr = "CentraLite", model = "3300-S" },
-      { mfr = "CentraLite", model = "3300" },
-      { mfr = "CentraLite", model = "3320-L" },
-      { mfr = "CentraLite", model = "3323-G" },
-      { mfr = "CentraLite", model = "Contact Sensor-A" },
-      { mfr = "Visonic", model = "MCT-340 E" },
-      { mfr = "Ecolink", model = "4655BC0-R" },
-      { mfr = "Ecolink", model = "DWZB1-ECO" },
-      { mfr = "iMagic by GreatStar", model = "1116-S" },
-      { mfr = "Bosch", model = "RFMS-ZBMS" },
-      { mfr = "Megaman", model = "MS601/z1" },
-      { mfr = "AduroSmart Eria", model = "CSW_ADUROLIGHT" },
-      { mfr = "ADUROLIGHT", model = "CSW_ADUROLIGHT" },
-      { mfr = "Sercomm Corp.", model = "SZ-DWS04" },
-      { mfr = "DAWON_DNS", model = "SS-B100-ZB" },
-      { mfr = "frient A/S", model = "WISZB-120" },
-      { mfr = "frient A/S", model = "WISZB-121" },
-      { mfr = "Compacta", model = "ZBWDS" }
-    },
-    CONFIGURATION = {
-      {
-        cluster = IASZone.ID,
-        attribute = IASZone.attributes.ZoneStatus.ID,
-        minimum_interval = 30,
-        maximum_interval = 300,
-        data_type = IASZone.attributes.ZoneStatus.base_type,
-        reportable_change = 1
-      },
-      {
-        cluster = TemperatureMeasurement.ID,
-        attribute = TemperatureMeasurement.attributes.MeasuredValue.ID,
-        minimum_interval = 30,
-        maximum_interval = 1800,
-        data_type = TemperatureMeasurement.attributes.MeasuredValue.base_type,
-        reportable_change = 100
-      }
     }
   }
 }
