@@ -50,7 +50,7 @@ local tripper_contact_handler = {
   lifecycle_handlers = {
     init = device_init
   },
-  can_handle = is_aqara_products
+  can_handle = is_tripper_products
 }
 
 return tripper_contact_handler
