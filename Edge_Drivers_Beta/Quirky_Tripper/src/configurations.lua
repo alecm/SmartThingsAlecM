@@ -20,12 +20,8 @@ local PowerConfiguration = clusters.PowerConfiguration
 local PollControl = clusters.PollControl
 
 local devices = {
-  EWELINK_HEIMAN = {
+  QRUIKY_TRIPPER = {
     FINGERPRINTS = {
-      --{ mfr = "eWeLink", model = "DS01" },
-      --{ mfr = "_TZ3000_f1hmoyj4", model = "TS0203" },
-      --{ mfr = "eWeLink", model = "SNZB-04P" },
-      --{ mfr = "HEIMAN", model = "DoorSensor-N" }
       {mfr = "Sercomm Corp.", model = "Tripper"}
     },
     CONFIGURATION = {
