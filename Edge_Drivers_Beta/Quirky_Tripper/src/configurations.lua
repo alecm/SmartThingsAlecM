@@ -20,7 +20,7 @@ local PowerConfiguration = clusters.PowerConfiguration
 local PollControl = clusters.PollControl
 
 local devices = {
-  QRUIKY_TRIPPER = {
+  QUIRKY_TRIPPER = {
     FINGERPRINTS = {
       {mfr = "Sercomm Corp.", model = "Tripper"}
     },
